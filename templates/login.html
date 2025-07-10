@@ -118,7 +118,7 @@
             font-weight: 500;
         }
         input {
-            width: 80%;
+            width: 85%; /* Changed from 80% */
             padding: 10px 40px 10px 12px;
             margin: 4px 0 0 0;
             border: 1px solid #bbb;
@@ -135,7 +135,7 @@
         }
         .toggle-password {
             position: absolute;
-            right:34px;
+            right: 20px; /* Changed from 34px */
             top: 70%;
             transform: translateY(-50%);
             color: #888;
@@ -194,11 +194,7 @@
 <body>
     <img src="{{ url_for('static', filename='college_logo.png') }}" alt="Logo" class="corner-logo">
     <div class="container">
-      
         <h2>Login</h2>
-        <div class="user-type">
-            
-        </div>
         <form id="loginForm" method="POST" action="{{ url_for('login') }}" onsubmit="login(event)">
             <div class="input-group">
                 <label for="username">Username</label>
@@ -213,25 +209,10 @@
             <div id="loginMsg" class="msg"></div>
         </form>
         <div class="footer">
-         
         </div>
     </div>
     <script>
-let selectedUserType = "admin";
-
-function selectUserType(type) {
-    selectedUserType = type;
-    document.getElementById('loginMsg').textContent = '';
-    document.getElementById('adminBtn').classList.remove('active');
-    document.getElementById('managementBtn').classList.remove('active');
-    document.getElementById('gateBtn').classList.remove('active');
-    document.getElementById(type + 'Btn').classList.add('active');
-    
-    document.getElementById('loginForm').setAttribute('action', '/login');
-}
-
 window.onload = function() {
-    selectUserType('admin');
     document.getElementById('togglePassword').addEventListener('click', function () {
         const pwd = document.getElementById('password');
         const type = pwd.getAttribute('type') === 'password' ? 'text' : 'password';
