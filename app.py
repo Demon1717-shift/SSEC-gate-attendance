@@ -95,7 +95,7 @@ def login():
         password = request.form.get('password')
 
         # Admin login
-        if username == "admin" and password == "adminpass":
+        if username == "ssecadmin" and password == "ssecadmin@123":
             session.clear()
             session['admin'] = True
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -103,7 +103,7 @@ def login():
             return redirect(url_for('admin_dashboard'))
 
         # Management login
-        if username == "management" and password == "managementpass":
+        if username == "ssecmanagement" and password == "ssecmanagement@123":
             session.clear()
             session['management'] = True
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -111,7 +111,7 @@ def login():
             return redirect(url_for('management_dashboard'))
 
         # Gate login
-        if username == "gate" and password == "gatepass":
+        if username == "ssecgate" and password == "ssecgate@123":
             session.clear()
             session['gate'] = True
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
