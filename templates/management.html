@@ -661,8 +661,8 @@
                                 <td>${r.staff_id}</td>
                                 <td>${r.name}</td>
                                 <td>${r.department}</td>
-                                <td>${r.entry_time ? new Date(r.entry_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '-'}</td>
-                                <td>${r.exit_time ? new Date(r.exit_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) : '-'}</td>
+                                <td>${utcToISTTime(r.entry_time)}</td>
+                                <td>${utcToISTTime(r.exit_time)}</td>
                                 <td style="font-weight:bold; color:${r.exit_time ? '#388e3c' : '#d32f2f'}">
                                     ${r.exit_time ? 'Exited' : 'Inside'}
                                 </td>
@@ -703,14 +703,12 @@
                     document.getElementById('recordsTableBody').innerHTML = records.length === 0
                         ? '<tr><td colspan="6">No records found for the past week</td></tr>'
                         : records.map(r => {
-                            const entryTime = new Date(r.entry_time);
-                            const exitTime = r.exit_time ? new Date(r.exit_time) : null;
                             return `<tr>
                                 <td>${r.staff_id}</td>
                                 <td>${r.name}</td>
                                 <td>${r.department}</td>
-                                <td>${entryTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</td>
-                                <td>${exitTime ? exitTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : '-'}</td>
+                                <td>${utcToISTDateTime(r.entry_time)}</td>
+                                <td>${utcToISTDateTime(r.exit_time)}</td>
                                 <td style="font-weight:bold; color:${r.exit_time ? '#388e3c' : '#d32f2f'}">
                                     ${r.exit_time ? 'Exited' : 'Inside'}
                                 </td>
@@ -798,14 +796,12 @@
             document.getElementById('staffGateRecordsTableBody').innerHTML = filtered.length === 0
                 ? '<tr><td colspan="6">No staff gate records found</td></tr>'
                 : filtered.map(r => {
-                    const entryTime = new Date(r.entry_time);
-                    const exitTime = r.exit_time ? new Date(r.exit_time) : null;
                     return `<tr>
                         <td>${r.staff_id}</td>
                         <td>${r.name}</td>
                         <td>${r.department}</td>
-                        <td>${entryTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</td>
-                        <td>${exitTime ? exitTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : '-'}</td>
+                        <td>${utcToISTDateTime(r.entry_time)}</td>
+                        <td>${utcToISTDateTime(r.exit_time)}</td>
                         <td style="font-weight:bold; color:${r.exit_time ? '#388e3c' : '#d32f2f'}">${r.exit_time ? 'Exited' : 'Inside'}</td>
                     </tr>`;
                 }).join('');
@@ -858,14 +854,12 @@
             document.getElementById('studentGateRecordsTableBody').innerHTML = filtered.length === 0
                 ? '<tr><td colspan="6">No student gate records found</td></tr>'
                 : filtered.map(r => {
-                    const entryTime = new Date(r.entry_time);
-                    const exitTime = r.exit_time ? new Date(r.exit_time) : null;
                     return `<tr>
                         <td>${r.staff_id}</td>
                         <td>${r.name}</td>
                         <td>${r.department}</td>
-                        <td>${entryTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}</td>
-                        <td>${exitTime ? exitTime.toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) : '-'}</td>
+                        <td>${utcToISTDateTime(r.entry_time)}</td>
+                        <td>${utcToISTDateTime(r.exit_time)}</td>
                         <td style="font-weight:bold; color:${r.exit_time ? '#388e3c' : '#d32f2f'}">${r.exit_time ? 'Exited' : 'Inside'}</td>
                     </tr>`;
                 }).join('');
@@ -1012,6 +1006,24 @@
                 document.getElementById('studentMonthPicker').style.display = 'inline-block';
                 document.getElementById('studentMonthPicker').focus();
             }
+        }
+
+        // Helper: Convert UTC ISO string to IST time string
+        function utcToISTTime(utcString) {
+            if (!utcString) return '-';
+            const date = new Date(utcString);
+            // Convert to IST by adding 5.5 hours (19800 seconds)
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istDate = new Date(date.getTime() + istOffset);
+            return istDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }
+        // Helper: Convert UTC ISO string to IST date+time string
+        function utcToISTDateTime(utcString) {
+            if (!utcString) return '-';
+            const date = new Date(utcString);
+            const istOffset = 5.5 * 60 * 60 * 1000;
+            const istDate = new Date(date.getTime() + istOffset);
+            return istDate.toLocaleString('en-IN', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true });
         }
 
         // Auto-refresh staff/student records after midnight
